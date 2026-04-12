@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>BBTI 羽毛球人格测试 🏸</title>
   <meta name="description" content="16道球场情景题，找到你的球场灵魂。16种羽毛球人格，你是哪一种？">
   <meta property="og:title" content="BBTI 羽毛球人格测试 🏸">
@@ -13,26 +13,26 @@
        Design Tokens
        ============================================================ */
     :root {
-      --color-primary: #00B4D8;
-      --color-primary-dark: #0096C7;
+      --color-primary: #2EBD59;
+      --color-primary-dark: #27AE60;
       --color-accent: #FF6B35;
-      --color-accent-light: rgba(255,107,53,0.15);
+      --color-accent-light: #FFF3E0;
       --color-accent-dark: #E85A2D;
-      --color-bg: #0A1628;
-      --color-bg-alt: #0F1D32;
-      --color-text: #E2E8F0;
-      --color-text-secondary: #8B9DC3;
-      --color-card: rgba(255,255,255,0.06);
-      --color-border: rgba(255,255,255,0.10);
-      --color-partner: rgba(0,212,170,0.10);
-      --color-partner-border: #00D4AA;
-      --color-rival: rgba(255,71,87,0.10);
-      --color-rival-border: #FF4757;
+      --color-bg: #FFF9F0;
+      --color-bg-alt: #FFF5E6;
+      --color-text: #2C3E50;
+      --color-text-secondary: #7A8B8C;
+      --color-card: #FFFFFF;
+      --color-border: #EBE3D5;
+      --color-partner: rgba(46,189,89,0.10);
+      --color-partner-border: #2EBD59;
+      --color-rival: rgba(231,76,60,0.10);
+      --color-rival-border: #E74C3C;
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
-      --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-      --shadow-btn: 0 4px 20px rgba(255,107,53,0.35);
+      --shadow-card: 0 4px 12px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+      --shadow-btn: 0 4px 20px rgba(255,107,53,0.25);
       --transition-fast: 200ms ease;
       --transition-slide: 350ms cubic-bezier(0.4, 0, 0.2, 1);
       --max-width: 440px;
@@ -46,8 +46,22 @@
     html { font-size: 16px; -webkit-text-size-adjust: 100%; }
     body {
       font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
-      background: linear-gradient(160deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
-      background-attachment: fixed;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 58px,
+          rgba(255,255,255,0.7) 58px,
+          rgba(255,255,255,0.7) 60px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 58px,
+          rgba(255,255,255,0.7) 58px,
+          rgba(255,255,255,0.7) 60px
+        ),
+        var(--color-bg);
       color: var(--color-text);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -100,7 +114,7 @@
       justify-content: center;
       min-height: 100vh;
       text-align: center;
-      padding: 40px var(--spacing-page);
+      padding: 40px var(--spacing-page) calc(40px + env(safe-area-inset-bottom));
     }
     .hero-emoji {
       font-size: 80px;
@@ -159,9 +173,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: rgba(10,22,40,0.85);
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
+      background: var(--color-bg);
       padding: 16px var(--spacing-page) 12px;
       max-width: var(--max-width);
       margin: 0 auto;
@@ -188,6 +200,17 @@
       border-radius: 3px;
       transition: width var(--transition-slide);
       width: 0%;
+      position: relative;
+    }
+    .progress-fill::after {
+      content: '🏸';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      line-height: 1;
+      filter: drop-shadow(0 0 4px rgba(255,107,53,0.4));
     }
     .back-btn {
       display: inline-flex;
@@ -233,6 +256,15 @@
       transform: translateX(105%);
       opacity: 0;
     }
+    .scene-text {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--color-text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.6;
+      opacity: 0.75;
+      padding-left: 2px;
+    }
     .question-text {
       font-size: 20px;
       font-weight: 600;
@@ -245,6 +277,8 @@
       gap: 12px;
     }
     .option-btn {
+      position: relative;
+      overflow: hidden;
       width: 100%;
       text-align: left;
       padding: 16px 20px;
@@ -253,9 +287,19 @@
       background: var(--color-card);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
       transition: border-color var(--transition-fast), background var(--transition-fast), transform 150ms ease;
+    }
+    .option-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255,107,53,0.10) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 200ms ease;
+      pointer-events: none;
+    }
+    .option-btn:active::after {
+      opacity: 1;
     }
     .option-btn:active {
       transform: scale(0.98);
@@ -286,7 +330,7 @@
       justify-content: center;
       min-height: 100vh;
       text-align: center;
-      padding: 40px var(--spacing-page);
+      padding: 40px var(--spacing-page) calc(40px + env(safe-area-inset-bottom));
     }
     .loading-emoji {
       font-size: 64px;
@@ -299,28 +343,13 @@
       75% { transform: rotate(-15deg) scale(1.1); }
       100% { transform: rotate(0deg) scale(1); }
     }
-    .loading-text {
-      font-size: 18px;
+    .loading-subtext {
+      font-size: 16px;
       font-weight: 500;
       margin-top: 24px;
       color: var(--color-text);
-    }
-    .loading-dots {
-      font-size: 24px;
-      margin-top: 8px;
-      color: var(--color-accent);
-      letter-spacing: 4px;
-    }
-    .loading-dots::after {
-      content: '';
-      animation: dots 1.5s steps(4, end) infinite;
-    }
-    @keyframes dots {
-      0% { content: ''; }
-      25% { content: '.'; }
-      50% { content: '..'; }
-      75% { content: '...'; }
-      100% { content: ''; }
+      min-height: 1.6em;
+      transition: opacity 200ms ease;
     }
 
     /* ============================================================
@@ -384,10 +413,114 @@
       font-weight: 500;
       margin-bottom: 28px;
       padding: 8px 16px;
-      background: rgba(0,180,216,0.12);
+      background: rgba(46,189,89,0.10);
       border-radius: var(--radius-sm);
       display: inline-block;
       width: 100%;
+    }
+
+    /* Quadrant Chart */
+    .quadrant-chart {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1;
+      margin: 8px auto 0;
+      touch-action: pan-y;
+      pointer-events: none;
+    }
+    .chart-legend {
+      pointer-events: auto;
+    }
+    .quadrant-axis-x, .quadrant-axis-y {
+      position: absolute;
+      background: var(--color-border);
+      animation: quadrantFadeIn 500ms ease forwards;
+      opacity: 0;
+    }
+    .quadrant-axis-x {
+      width: 100%;
+      height: 1px;
+      top: 50%;
+      left: 0;
+    }
+    .quadrant-axis-y {
+      height: 100%;
+      width: 1px;
+      left: 50%;
+      top: 0;
+    }
+    .quadrant-label {
+      position: absolute;
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      animation: quadrantFadeIn 500ms ease forwards;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .label-top { top: 2px; left: 50%; transform: translateX(-50%); }
+    .label-bottom { bottom: 2px; left: 50%; transform: translateX(-50%); }
+    .label-left { left: 2px; top: 50%; transform: translateY(-50%); }
+    .label-right { right: 2px; top: 50%; transform: translateY(-50%); }
+    .quadrant-dot {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: left 800ms cubic-bezier(0.34, 1.56, 0.64, 1), top 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 2;
+    }
+    .quadrant-dot.zen-plan {
+      background: var(--color-primary);
+      border: 3px solid var(--color-primary);
+      box-shadow: 0 0 12px rgba(46,189,89,0.4);
+    }
+    .quadrant-dot.zen-random {
+      background: transparent;
+      border: 3px solid var(--color-primary);
+      box-shadow: 0 0 12px rgba(46,189,89,0.4);
+    }
+    .quadrant-dot.heated-plan {
+      background: var(--color-accent);
+      border: 3px solid var(--color-accent);
+      box-shadow: 0 0 12px rgba(255,107,53,0.5);
+    }
+    .quadrant-dot.heated-random {
+      background: transparent;
+      border: 3px solid var(--color-accent);
+      box-shadow: 0 0 12px rgba(255,107,53,0.5);
+    }
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin-top: 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-dot.filled-cyan { background: var(--color-primary); }
+    .legend-dot.hollow-cyan { background: transparent; border: 2px solid var(--color-primary); }
+    .legend-dot.filled-orange { background: var(--color-accent); }
+    .legend-dot.hollow-orange { background: transparent; border: 2px solid var(--color-accent); }
+    @keyframes quadrantFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     /* Section cards */
@@ -398,8 +531,6 @@
       margin-bottom: 16px;
       box-shadow: var(--shadow-card);
       border: 1px solid var(--color-border);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
     }
     .section-title {
       font-size: 14px;
@@ -443,7 +574,7 @@
     .stat-bar-track {
       flex: 1;
       height: 10px;
-      background: rgba(255,255,255,0.08);
+      background: #EEDDCC;
       border-radius: 5px;
       overflow: hidden;
     }
@@ -515,7 +646,7 @@
     }
     .share-btn:active { transform: scale(0.97); }
     .share-btn.primary {
-      background: linear-gradient(135deg, var(--color-primary), #00D4AA);
+      background: linear-gradient(135deg, var(--color-primary), #5CD87A);
       color: #fff;
     }
     .share-btn.secondary {
@@ -551,7 +682,7 @@
     }
     .gallery-item.active {
       border-color: var(--color-primary);
-      background: rgba(0,180,216,0.12);
+      background: rgba(46,189,89,0.10);
     }
     .gallery-item.locked {
       opacity: 0.35;
@@ -566,6 +697,7 @@
       text-align: center;
       margin-top: 32px;
       padding-top: 24px;
+      padding-bottom: env(safe-area-inset-bottom);
       border-top: 1px solid var(--color-border);
     }
     .disclaimer {
@@ -595,11 +727,11 @@
     /* Toast */
     .toast {
       position: fixed;
-      bottom: 80px;
+      bottom: calc(80px + env(safe-area-inset-bottom));
       left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: rgba(10,22,40,0.95);
-      color: #E2E8F0;
+      background: rgba(44,62,80,0.92);
+      color: #FFFFFF;
       padding: 12px 24px;
       border-radius: var(--radius-lg);
       font-size: 14px;
@@ -611,6 +743,62 @@
     .toast.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
+    }
+
+    /* Share card overlay */
+    .share-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease;
+    }
+    .share-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .share-overlay-inner {
+      background: var(--color-card);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    .share-overlay-inner canvas {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+    }
+    .share-overlay-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .share-overlay-actions button {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      transition: transform 150ms ease;
+    }
+    .share-overlay-actions button:active { transform: scale(0.97); }
+    .share-card-save {
+      background: linear-gradient(135deg, var(--color-primary), #5CD87A);
+      color: #fff;
+    }
+    .share-card-close {
+      background: var(--color-card);
+      color: var(--color-text-secondary);
+      border: 1px solid var(--color-border);
     }
   </style>
 </head>
@@ -661,8 +849,7 @@
   <section id="view-loading" class="view">
     <div class="loading-content">
       <div class="loading-emoji">🏸</div>
-      <p class="loading-text">正在分析你的球场灵魂...</p>
-      <div class="loading-dots"></div>
+      <p class="loading-subtext" id="loading-subtext">正在分析你的球场灵魂...</p>
     </div>
   </section>
 
@@ -677,6 +864,17 @@
 
   <!-- Toast notification -->
   <div class="toast" id="toast"></div>
+
+  <!-- Share card overlay -->
+  <div class="share-overlay" id="share-overlay">
+    <div class="share-overlay-inner">
+      <canvas id="share-canvas"></canvas>
+      <div class="share-overlay-actions">
+        <button class="share-card-save" id="btn-save-card">保存图片</button>
+        <button class="share-card-close" id="btn-close-card">关闭</button>
+      </div>
+    </div>
+  </div>
 
   <script src="js/data.js" defer></script>
   <script src="js/app.js" defer></script>

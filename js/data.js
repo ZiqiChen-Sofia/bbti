@@ -54,6 +54,7 @@ window.BBTI_DATA = (function () {
     {
       id: 1,
       dimension: 'attack_defense',
+      scene: '裁判手势：19比19。全场安静了一秒。',
       text: '约球群喊了半天终于凑齐人，19:19关键球，搭子瞟了你一眼——',
       options: [
         { label: 'A', text: '不管了！一把梭哈！起板就杀！', scores: { attack: 2, defense: 0 } },
@@ -65,6 +66,7 @@ window.BBTI_DATA = (function () {
     {
       id: 2,
       dimension: 'attack_defense',
+      scene: '球馆外的烧烤摊，啤酒刚打开。',
       text: '打完球撸串，聊起今天最得意的一分——',
       options: [
         { label: 'A', text: '"一记重杀直接锤地上，对面连反应都没有"', scores: { attack: 2, defense: 0 } },
@@ -76,6 +78,7 @@ window.BBTI_DATA = (function () {
     {
       id: 3,
       dimension: 'attack_defense',
+      scene: '群消息弹出，还附了一段接杀视频。',
       text: '约球群有人说"今天来了个怎么打都打不死的，谁来挑战？"——',
       options: [
         { label: 'A', text: '我来！杀不死他我不信了', scores: { attack: 2, defense: 0 } },
@@ -87,6 +90,7 @@ window.BBTI_DATA = (function () {
     {
       id: 4,
       dimension: 'attack_defense',
+      scene: '搭子在发球线前回头看了你一眼。',
       text: '双打搭子跟你说"稳一点，别着急进攻好不好"——',
       options: [
         { label: 'A', text: '"嗯嗯好的"（下一拍继续起跳暴杀）', scores: { attack: 2, defense: 0 } },
@@ -100,6 +104,7 @@ window.BBTI_DATA = (function () {
     {
       id: 5,
       dimension: 'skill_power',
+      scene: '如果有个球技精灵给你一个愿望......',
       text: '如果只能练一项技术到巅峰，你练啥？',
       options: [
         { label: 'A', text: '杀球力量——一拍子锤死，简单粗暴', scores: { power: 2, skill: 0 } },
@@ -111,6 +116,7 @@ window.BBTI_DATA = (function () {
     {
       id: 6,
       dimension: 'skill_power',
+      scene: '球拍店老板把四把拍子摆在你面前。',
       text: '选新球拍，你最看重什么？',
       options: [
         { label: 'A', text: '头重进攻拍！杀球那个下压感，懂的都懂', scores: { power: 2, skill: 0 } },
@@ -122,6 +128,7 @@ window.BBTI_DATA = (function () {
     {
       id: 7,
       dimension: 'skill_power',
+      scene: '转播画面切到慢镜头回放......',
       text: '你觉得自己打球风格最像谁？',
       options: [
         { label: 'A', text: '安赛龙——后场起跳重杀，一拍封喉', scores: { power: 2, skill: 0 } },
@@ -133,6 +140,7 @@ window.BBTI_DATA = (function () {
     {
       id: 8,
       dimension: 'skill_power',
+      scene: '球贴着网带翻了过来，时间仿佛慢了下来。',
       text: '双打时对手搓了个贴网球，搭子喊"你的你的！"——',
       options: [
         { label: 'A', text: '挑起来吧！后面搭子会补位的（大概）', scores: { power: 2, skill: 0 } },
@@ -146,6 +154,7 @@ window.BBTI_DATA = (function () {
     {
       id: 9,
       dimension: 'plan_random',
+      scene: '球友群消息 99+，周末比赛报名中。',
       text: '球友群通知周末有业余混双赛——到底去不去打啊？',
       options: [
         { label: 'A', text: '报！已经拉搭子加练了，还研究了对手打法', scores: { plan: 2, random: 0 } },
@@ -157,6 +166,7 @@ window.BBTI_DATA = (function () {
     {
       id: 10,
       dimension: 'plan_random',
+      scene: '场馆广播：距离比赛开始还有十分钟。',
       text: '比赛还有10分钟开始，搭子已经在热身了，你在——',
       options: [
         { label: 'A', text: '跟搭子对暗号呢，三套战术已经安排好了', scores: { plan: 2, random: 0 } },
@@ -168,6 +178,7 @@ window.BBTI_DATA = (function () {
     {
       id: 11,
       dimension: 'plan_random',
+      scene: '你拉开球包拉链，里面是——',
       text: '球包里几把拍子？每次约球你——',
       options: [
         { label: 'A', text: '三把以上，不同拍对应不同对手和磅数', scores: { plan: 2, random: 0 } },
@@ -179,6 +190,7 @@ window.BBTI_DATA = (function () {
     {
       id: 12,
       dimension: 'plan_random',
+      scene: '馆外的面馆，热汤端上来了。',
       text: '打完一局，干饭路上球友问"复盘一下？"——',
       options: [
         { label: 'A', text: '"来啊！第三分那球你处理不对，应该……"', scores: { plan: 2, random: 0 } },
@@ -192,6 +204,7 @@ window.BBTI_DATA = (function () {
     {
       id: 13,
       dimension: 'zen_heated',
+      scene: '比分牌翻了一下，对面欢呼了一声。',
       text: '关键分打丢了，搭子默默看了你一眼——',
       options: [
         { label: 'A', text: '深呼吸，"没事，下一分拿回来"', scores: { zen: 2, heated: 0 } },
@@ -203,6 +216,7 @@ window.BBTI_DATA = (function () {
     {
       id: 14,
       dimension: 'zen_heated',
+      scene: '搭子递过来一瓶水，犹豫了一下开口了。',
       text: '连输两局了，搭子试探着说"……要不歇一局？"——',
       options: [
         { label: 'A', text: '"行啊，正好去买瓶水，开心就好嘛"', scores: { zen: 2, heated: 0 } },
@@ -214,6 +228,7 @@ window.BBTI_DATA = (function () {
     {
       id: 15,
       dimension: 'zen_heated',
+      scene: '饭桌上筷子停了一下。',
       text: '被一个你觉得水平不如你的人赢了，干饭时——',
       options: [
         { label: 'A', text: '"今天状态不好而已，吃饭吃饭"', scores: { zen: 2, heated: 0 } },
@@ -225,6 +240,7 @@ window.BBTI_DATA = (function () {
     {
       id: 16,
       dimension: 'zen_heated',
+      scene: '夜深了，你躺在床上还在想今天的球。',
       text: '关于「赢球」这件事，你内心的真实想法是——',
       options: [
         { label: 'A', text: '赢了开心输了也开心，打球嘛，重在吃饭', scores: { zen: 2, heated: 0 } },
