@@ -376,15 +376,13 @@
     html += '<p class="result-tagline">' + p.tagline + '</p>';
     html += '</div>';
 
-    // ── Quadrant Chart (C position) ──
+    // ── Quadrant Chart ──
     html += '<div class="result-section">';
-    html += '<div class="section-title">📊 维度坐标</div>';
     html += buildQuadrantChart();
     html += '</div>';
 
     // ── Traits (行为卡片) ──
     html += '<div class="result-section">';
-    html += '<div class="section-title">🏸 行为特征</div>';
     html += '<div class="trait-item"><span class="trait-label">🏸 核心行为</span>' + p.coreBehavior + '</div>';
     html += '<div class="trait-item"><span class="trait-label">🏸 行为模式</span>' + p.behaviorPattern + '</div>';
     html += '<div class="trait-item"><span class="trait-label">🏸 经典语录</span><span class="quote-copyable" data-quote="' + p.quote.replace(/"/g, '&quot;') + '">' + p.quote + '</span></div>';
@@ -397,30 +395,30 @@
     html += '<div class="archetype-desc">' + p.playerArchetype.desc + '</div>';
     html += '</div>';
 
-    // ── Partner card ──
+    // ── Partner & Rival cards (side by side, horizontal layout) ──
     var partnerData = DATA.personalities[p.partner.code];
     var partnerAvatar = 'img/' + p.partner.code.toLowerCase() + '.png';
-    html += '<div class="result-section match-card partner">';
-    html += '<div class="match-type-header">🏸 最佳双打搭档</div>';
-    html += '<div class="match-info">';
-    html += '<img class="match-avatar" src="' + partnerAvatar + '" alt="' + partnerData.nameCN + '">';
-    html += '<div class="match-type-name">' + partnerData.code + ' ' + partnerData.nameCN + '</div>';
-    html += '</div>';
-    html += '<div class="match-reason">' + p.partner.reason + '</div>';
-    html += '<div class="match-short-tag">' + p.partner.shortTag + '</div>';
-    html += '</div>';
-
-    // ── Rival card ──
     var rivalData = DATA.personalities[p.rival.code];
     var rivalAvatar = 'img/' + p.rival.code.toLowerCase() + '.png';
+
+    html += '<div class="match-row">';
+
+    html += '<div class="result-section match-card partner">';
+    html += '<div class="match-type-header">🏸 最佳搭档</div>';
+    html += '<div class="match-body">';
+    html += '<img class="match-avatar" src="' + partnerAvatar + '" alt="' + partnerData.nameCN + '">';
+    html += '<div class="match-text"><div class="match-type-name">' + partnerData.nameCN + '</div>';
+    html += '<div class="match-reason">' + p.partner.shortTag + '</div></div>';
+    html += '</div></div>';
+
     html += '<div class="result-section match-card rival">';
-    html += '<div class="match-type-header">⚔️ 最佳对打宿敌</div>';
-    html += '<div class="match-info">';
+    html += '<div class="match-type-header">⚔️ 宿敌</div>';
+    html += '<div class="match-body">';
     html += '<img class="match-avatar" src="' + rivalAvatar + '" alt="' + rivalData.nameCN + '">';
-    html += '<div class="match-type-name">' + rivalData.code + ' ' + rivalData.nameCN + '</div>';
-    html += '</div>';
-    html += '<div class="match-reason">' + p.rival.reason + '</div>';
-    html += '<div class="match-short-tag">' + p.rival.shortTag + '</div>';
+    html += '<div class="match-text"><div class="match-type-name">' + rivalData.nameCN + '</div>';
+    html += '<div class="match-reason">' + p.rival.shortTag + '</div></div>';
+    html += '</div></div>';
+
     html += '</div>';
 
     // ── Share section ──
@@ -749,46 +747,69 @@
     var p = DATA.personalities[state.resultType];
     var partnerData = DATA.personalities[p.partner.code];
     var rivalData = DATA.personalities[p.rival.code];
-    var title = '🏸 我是' + p.emoji + ' ' + p.nameCN + '！';
     var text = '🏸 我是' + p.emoji + ' ' + p.nameCN + '！\n'
       + p.slogan + '\n'
       + '最佳搭档 ' + partnerData.emoji + ' ' + partnerData.nameCN + '：' + p.partner.shortTag + '\n'
       + '宿敌 ' + rivalData.emoji + ' ' + rivalData.nameCN + '：' + p.rival.shortTag + '\n'
-      + '快来测测你是什么球场灵魂？';
+      + '快来测测你是什么球场灵魂？\n'
+      + window.location.href.split('#')[0];
 
-    var shareUrl = window.location.href.split('#')[0];
-    var fullText = text + '\n' + shareUrl;
-
-    // Always copy to clipboard first so the user has the text regardless
-    copyToClipboard(fullText, true);
-
-    // Then try Web Share API as a bonus (non-blocking)
-    if (navigator.share) {
-      navigator.share({
-        title: title,
-        text: text,
-        url: shareUrl
-      }).catch(function () { /* user cancelled or error, already copied */ });
-    }
-  }
-
-  function copyToClipboard(text, showGuide) {
-    var msg = showGuide
-      ? '已复制到剪贴板，去微信粘贴给球友吧 🏸'
-      : '链接已复制，快去分享给球友吧！';
+    // Copy to clipboard, then show guide overlay
+    var onCopied = function () {
+      showShareGuide(text);
+    };
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () {
-        showToast(msg);
-      }).catch(function () {
-        fallbackCopy(text, msg);
+      navigator.clipboard.writeText(text).then(onCopied).catch(function () {
+        fallbackCopy(text);
+        onCopied();
       });
     } else {
-      fallbackCopy(text, msg);
+      fallbackCopy(text);
+      onCopied();
     }
   }
 
-  function fallbackCopy(text, msg) {
+  function showShareGuide(text) {
+    var overlay = document.getElementById('share-guide-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'share-guide-overlay';
+      overlay.className = 'share-guide-overlay';
+      overlay.innerHTML =
+        '<div class="share-guide-card">' +
+          '<div class="share-guide-icon">✅</div>' +
+          '<div class="share-guide-title">分享文案已复制</div>' +
+          '<div class="share-guide-text" id="share-guide-text"></div>' +
+          '<div class="share-guide-hint">打开微信 → 选择好友 → 长按粘贴发送</div>' +
+          '<button class="share-guide-btn" id="share-guide-close">知道了</button>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay || e.target.id === 'share-guide-close') {
+          overlay.classList.remove('show');
+        }
+      });
+    }
+    document.getElementById('share-guide-text').textContent = text;
+    // Force reflow then show
+    overlay.offsetHeight;
+    overlay.classList.add('show');
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast('已复制到剪贴板');
+      }).catch(function () {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
@@ -796,10 +817,7 @@
     ta.select();
     try {
       document.execCommand('copy');
-      showToast(msg || '链接已复制，快去分享给球友吧！');
-    } catch (e) {
-      showToast('请长按复制链接分享');
-    }
+    } catch (e) { /* silent */ }
     document.body.removeChild(ta);
   }
 
