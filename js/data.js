@@ -50,275 +50,187 @@ window.BBTI_DATA = (function () {
   // 3. 24 Questions
   // ============================================================
   var questions = [
-    // ── Dimension 1: Attack vs Defense (Q1-Q6) ──
+    // ── Dimension 1: Attack vs Defense (Q1-Q4) ──
     {
       id: 1,
       dimension: 'attack_defense',
-      text: '比分 19:19，关键球，你会？',
+      text: '约球群喊了半天终于凑齐人，19:19关键球，搭子瞟了你一眼——',
       options: [
-        { label: 'A', text: '主动起板杀球，赌一波大的', scores: { attack: 2, defense: 0 } },
-        { label: 'B', text: '拉一个高远球，等对手先失误', scores: { attack: 0, defense: 2 } },
-        { label: 'C', text: '吊个网前，试探一下', scores: { attack: 1, defense: 1 } },
-        { label: 'D', text: '看情况，有机会就攻', scores: { attack: 1, defense: 0 } }
+        { label: 'A', text: '不管了！一把梭哈！起板就杀！', scores: { attack: 2, defense: 0 } },
+        { label: 'B', text: '稳住别浪，拉个高远球先耗着', scores: { attack: 0, defense: 2 } },
+        { label: 'C', text: '吊个网前骗他上来再说', scores: { attack: 1, defense: 1 } },
+        { label: 'D', text: '有机会就偷袭，没机会接着磨', scores: { attack: 1, defense: 0 } }
       ]
     },
     {
       id: 2,
       dimension: 'attack_defense',
-      text: '对手挑了个后场高球，你在后场——',
+      text: '打完球撸串，聊起今天最得意的一分——',
       options: [
-        { label: 'A', text: '起跳！重杀！一拍解决！', scores: { attack: 2, defense: 0 } },
-        { label: 'B', text: '拉一个到对角底线，继续控制', scores: { attack: 0, defense: 2 } },
-        { label: 'C', text: '吊一个网前，让他跑', scores: { attack: 1, defense: 1 } },
-        { label: 'D', text: '看他站位再决定', scores: { attack: 0, defense: 1 } }
+        { label: 'A', text: '"一记重杀直接锤地上，对面连反应都没有"', scores: { attack: 2, defense: 0 } },
+        { label: 'B', text: '"跟他磨了30多拍，最后他自己先崩了"', scores: { attack: 0, defense: 2 } },
+        { label: 'C', text: '"一个假动作骗翻全场，隔壁场都在看"', scores: { attack: 1, defense: 0 } },
+        { label: 'D', text: '"反正赢了就行，来来来先干杯"', scores: { attack: 1, defense: 1 } }
       ]
     },
     {
       id: 3,
       dimension: 'attack_defense',
-      text: '你理想中最爽的得分方式？',
+      text: '约球群有人说"今天来了个怎么打都打不死的，谁来挑战？"——',
       options: [
-        { label: 'A', text: '一记重杀，球直接落地，对面没反应过来', scores: { attack: 2, defense: 0 } },
-        { label: 'B', text: '连续多拍调动，对手最后一拍接飞了', scores: { attack: 0, defense: 2 } },
-        { label: 'C', text: '一个假动作骗过所有人', scores: { attack: 1, defense: 0 } },
-        { label: 'D', text: '都行，赢就完了', scores: { attack: 1, defense: 1 } }
+        { label: 'A', text: '我来！杀不死他我不信了', scores: { attack: 2, defense: 0 } },
+        { label: 'B', text: '这种我喜欢，来比谁更能磨', scores: { attack: 0, defense: 2 } },
+        { label: 'C', text: '有点头疼，最怕假动作多的那种', scores: { attack: 1, defense: 1 } },
+        { label: 'D', text: '无所谓，来什么对手打什么球', scores: { attack: 1, defense: 1 } }
       ]
     },
     {
       id: 4,
       dimension: 'attack_defense',
-      text: '接到对方又高又慢的球？',
+      text: '双打搭子跟你说"稳一点，别着急进攻好不好"——',
       options: [
-        { label: 'A', text: '谢谢送温暖！起跳扣杀！', scores: { attack: 2, defense: 0 } },
-        { label: 'B', text: '别急，吊一个网前先控制住', scores: { attack: 0, defense: 2 } },
-        { label: 'C', text: '推一个平高球压底线', scores: { attack: 1, defense: 1 } },
-        { label: 'D', text: '先观察对手站位再决定', scores: { attack: 0, defense: 1 } }
+        { label: 'A', text: '"嗯嗯好的"（下一拍继续起跳暴杀）', scores: { attack: 2, defense: 0 } },
+        { label: 'B', text: '"确实，先控制住别送分了"', scores: { attack: 0, defense: 2 } },
+        { label: 'C', text: '"道理我都懂但是手它不听话啊！"', scores: { attack: 1, defense: 0 } },
+        { label: 'D', text: '"行吧，但看到机会球我还是得杀啊"', scores: { attack: 1, defense: 0 } }
       ]
     },
+
+    // ── Dimension 2: Skill vs Power (Q5-Q8) ──
     {
       id: 5,
-      dimension: 'attack_defense',
-      text: '你打球最怕遇到什么对手？',
+      dimension: 'skill_power',
+      text: '如果只能练一项技术到巅峰，你练啥？',
       options: [
-        { label: 'A', text: '防守特别好的，怎么杀都不死', scores: { attack: 2, defense: 0 } },
-        { label: 'B', text: '进攻特别猛的，根本不给你喘气', scores: { attack: 0, defense: 2 } },
-        { label: 'C', text: '假动作特别多的，每球都猜错', scores: { attack: 1, defense: 1 } },
-        { label: 'D', text: '体力特别好的，越打越精神', scores: { attack: 1, defense: 1 } }
+        { label: 'A', text: '杀球力量——一拍子锤死，简单粗暴', scores: { power: 2, skill: 0 } },
+        { label: 'B', text: '网前搓球——细腻如丝，对手干瞪眼', scores: { skill: 2, power: 0 } },
+        { label: 'C', text: '假动作——全场都猜不到我下一拍', scores: { skill: 1, power: 0 } },
+        { label: 'D', text: '步伐——到位了什么球都好接', scores: { skill: 1, power: 1 } }
       ]
     },
     {
       id: 6,
-      dimension: 'attack_defense',
-      text: '搭子跟你说「稳一点，别着急进攻」——',
+      dimension: 'skill_power',
+      text: '选新球拍，你最看重什么？',
       options: [
-        { label: 'A', text: '嗯嗯，好的（下一拍继续杀）', scores: { attack: 2, defense: 0 } },
-        { label: 'B', text: '确实，控制住节奏再说', scores: { attack: 0, defense: 2 } },
-        { label: 'C', text: '他说得对，但我忍不住啊', scores: { attack: 1, defense: 0 } },
-        { label: 'D', text: '行吧，但看到机会还是得杀', scores: { attack: 1, defense: 0 } }
+        { label: 'A', text: '头重进攻拍！杀球那个下压感，懂的都懂', scores: { power: 2, skill: 0 } },
+        { label: 'B', text: '速度拍！手感好控球灵活才是王道', scores: { skill: 2, power: 0 } },
+        { label: 'C', text: '均衡拍吧，攻守都能兼顾', scores: { skill: 1, power: 1 } },
+        { label: 'D', text: '这把颜值高……买了买了（认真的）', scores: { skill: 1, power: 1 } }
       ]
     },
-
-    // ── Dimension 2: Skill vs Power (Q7-Q12) ──
     {
       id: 7,
       dimension: 'skill_power',
-      text: '如果只能练一项技术到巅峰？',
+      text: '你觉得自己打球风格最像谁？',
       options: [
-        { label: 'A', text: '杀球力量——一拍致命', scores: { power: 2, skill: 0 } },
-        { label: 'B', text: '网前搓球——细腻如手术', scores: { skill: 2, power: 0 } },
-        { label: 'C', text: '假动作——让对手永远猜错', scores: { skill: 1, power: 0 } },
-        { label: 'D', text: '步伐——到位了什么都好说', scores: { skill: 1, power: 1 } }
+        { label: 'A', text: '安赛龙——后场起跳重杀，一拍封喉', scores: { power: 2, skill: 0 } },
+        { label: 'B', text: '戴资颖——假动作变幻莫测，你永远猜不到', scores: { skill: 2, power: 0 } },
+        { label: 'C', text: '桃田贤斗——极致网前，搓得你怀疑人生', scores: { skill: 2, power: 0 } },
+        { label: 'D', text: '林丹——慢慢打太极突然一剑封喉', scores: { skill: 1, power: 1 } }
       ]
     },
     {
       id: 8,
       dimension: 'skill_power',
-      text: '选新球拍最看重什么？',
+      text: '双打时对手搓了个贴网球，搭子喊"你的你的！"——',
       options: [
-        { label: 'A', text: '头重进攻拍，杀球下压感要足', scores: { power: 2, skill: 0 } },
-        { label: 'B', text: '轻快速度拍，手感灵活好控制', scores: { skill: 2, power: 0 } },
-        { label: 'C', text: '均衡拍，攻守兼备', scores: { skill: 1, power: 1 } },
-        { label: 'D', text: '颜值，好看最重要（认真的）', scores: { skill: 1, power: 1 } }
+        { label: 'A', text: '挑起来吧！后面搭子会补位的（大概）', scores: { power: 2, skill: 0 } },
+        { label: 'B', text: '轻搓一个更贴的回去，比细腻谁怕谁', scores: { skill: 2, power: 0 } },
+        { label: 'C', text: '勾个对角，出其不意搞他', scores: { skill: 1, power: 0 } },
+        { label: 'D', text: '能放就放，放不了就挑呗', scores: { skill: 1, power: 1 } }
       ]
     },
+
+    // ── Dimension 3: Plan vs Random (Q9-Q12) ──
     {
       id: 9,
-      dimension: 'skill_power',
-      text: '你的得分球风格更像谁？',
+      dimension: 'plan_random',
+      text: '球友群通知周末有业余混双赛——到底去不去打啊？',
       options: [
-        { label: 'A', text: '安赛龙——标志性后场起跳重杀', scores: { power: 2, skill: 0 } },
-        { label: 'B', text: '戴资颖——假动作变线，你永远猜不到', scores: { skill: 2, power: 0 } },
-        { label: 'C', text: '桃田贤斗——极致搓球，网前让你绝望', scores: { skill: 2, power: 0 } },
-        { label: 'D', text: '林丹——变速突击，让你以为在打太极突然一剑封喉', scores: { skill: 1, power: 1 } }
+        { label: 'A', text: '报！已经拉搭子加练了，还研究了对手打法', scores: { plan: 2, random: 0 } },
+        { label: 'B', text: '报了，到时候正常发挥就行', scores: { plan: 1, random: 0 } },
+        { label: 'C', text: '周六晚上才想起来，球拍线还是断的', scores: { plan: 0, random: 2 } },
+        { label: 'D', text: '群里聊得热闹随手就报了，规则都没看', scores: { plan: 0, random: 1 } }
       ]
     },
     {
       id: 10,
-      dimension: 'skill_power',
-      text: '对手网前放了个很贴网的球——',
+      dimension: 'plan_random',
+      text: '比赛还有10分钟开始，搭子已经在热身了，你在——',
       options: [
-        { label: 'A', text: '挑起来，重新组织进攻（力量解决一切）', scores: { power: 2, skill: 0 } },
-        { label: 'B', text: '轻搓一个贴网回去，比细腻', scores: { skill: 2, power: 0 } },
-        { label: 'C', text: '勾对角，出其不意', scores: { skill: 1, power: 0 } },
-        { label: 'D', text: '看着办，能放就放不能放就挑', scores: { skill: 1, power: 1 } }
+        { label: 'A', text: '跟搭子对暗号呢，三套战术已经安排好了', scores: { plan: 2, random: 0 } },
+        { label: 'B', text: '简单拉伸一下，感觉状态到了就行', scores: { plan: 1, random: 1 } },
+        { label: 'C', text: '还在找球拍/换鞋/上厕所/买水', scores: { plan: 0, random: 2 } },
+        { label: 'D', text: '在跟隔壁场的人聊天呢，"马上马上！"', scores: { plan: 0, random: 1 } }
       ]
     },
     {
       id: 11,
-      dimension: 'skill_power',
-      text: '你打球最依赖什么？',
+      dimension: 'plan_random',
+      text: '球包里几把拍子？每次约球你——',
       options: [
-        { label: 'A', text: '爆发力和速度——「快」和「重」是我的武器', scores: { power: 2, skill: 0 } },
-        { label: 'B', text: '手感和节奏——「准」和「变」是我的武器', scores: { skill: 2, power: 0 } },
-        { label: 'C', text: '体力和跑位——「多」和「稳」是我的武器', scores: { skill: 1, power: 1 } },
-        { label: 'D', text: '都有一点但都不突出……', scores: { skill: 1, power: 1 } }
+        { label: 'A', text: '三把以上，不同拍对应不同对手和磅数', scores: { plan: 2, random: 0 } },
+        { label: 'B', text: '两把，一主一备，够用了', scores: { plan: 1, random: 0 } },
+        { label: 'C', text: '一把走天下，用顺手了干嘛换', scores: { plan: 0, random: 1 } },
+        { label: 'D', text: '有时候忘带拍，到了蹭别人的（嘿嘿）', scores: { plan: 0, random: 2 } }
       ]
     },
     {
       id: 12,
-      dimension: 'skill_power',
-      text: '比赛碰到一个假动作特别多的对手——',
+      dimension: 'plan_random',
+      text: '打完一局，干饭路上球友问"复盘一下？"——',
       options: [
-        { label: 'A', text: '管他假不假，我杀球够重他就来不及做假动作', scores: { power: 2, skill: 0 } },
-        { label: 'B', text: '以彼之道还施彼身，我也来假动作', scores: { skill: 2, power: 0 } },
-        { label: 'C', text: '冷静观察，不被骗就行', scores: { skill: 1, power: 0 } },
-        { label: 'D', text: '烦死了，我最讨厌假动作选手', scores: { skill: 0, power: 1 } }
+        { label: 'A', text: '"来啊！第三分那球你处理不对，应该……"', scores: { plan: 2, random: 0 } },
+        { label: 'B', text: '"大概想想关键分怎么处理的就行"', scores: { plan: 1, random: 0 } },
+        { label: 'C', text: '"别复盘了！点菜点菜！我快饿死了！"', scores: { plan: 0, random: 2 } },
+        { label: 'D', text: '"我只记得我那记帅球了，其他全忘了"', scores: { plan: 0, random: 1 } }
       ]
     },
 
-    // ── Dimension 3: Plan vs Random (Q13-Q18) ──
+    // ── Dimension 4: Zen vs Heated (Q13-Q16) ──
     {
       id: 13,
-      dimension: 'plan_random',
-      text: '球友群里通知周末有个业余混双赛——',
+      dimension: 'zen_heated',
+      text: '关键分打丢了，搭子默默看了你一眼——',
       options: [
-        { label: 'A', text: '立刻拉搭子加练，还研究了往年参赛选手的打法', scores: { plan: 2, random: 0 } },
-        { label: 'B', text: '报个名，到时候正常发挥就行', scores: { plan: 1, random: 0 } },
-        { label: 'C', text: '周六晚上才想起来，发现球拍线都断了还没穿', scores: { plan: 0, random: 2 } },
-        { label: 'D', text: '看群里聊得热闹随手报了名，具体规则都没看', scores: { plan: 0, random: 1 } }
+        { label: 'A', text: '深呼吸，"没事，下一分拿回来"', scores: { zen: 2, heated: 0 } },
+        { label: 'B', text: '小声骂了自己一句，然后继续', scores: { zen: 0, heated: 1 } },
+        { label: 'C', text: '啪地拍了一下大腿，"这球怎么丢的！"', scores: { zen: 0, heated: 2 } },
+        { label: 'D', text: '表面微笑，内心已经写了三千字检讨', scores: { zen: 1, heated: 0 } }
       ]
     },
     {
       id: 14,
-      dimension: 'plan_random',
-      text: '比赛开始前十分钟——',
+      dimension: 'zen_heated',
+      text: '连输两局了，搭子试探着说"……要不歇一局？"——',
       options: [
-        { label: 'A', text: '已经想好了针对对手的三套战术', scores: { plan: 2, random: 0 } },
-        { label: 'B', text: '简单热身，感觉状态就行', scores: { plan: 1, random: 1 } },
-        { label: 'C', text: '还在找球拍/换鞋/上厕所', scores: { plan: 0, random: 2 } },
-        { label: 'D', text: '在跟旁边的人聊天', scores: { plan: 0, random: 1 } }
+        { label: 'A', text: '"行啊，正好去买瓶水，开心就好嘛"', scores: { zen: 2, heated: 0 } },
+        { label: 'B', text: '"不歇！今天必须赢回来再走！"', scores: { zen: 0, heated: 2 } },
+        { label: 'C', text: '"先冷静想想，刚才到底哪出了问题"', scores: { zen: 1, heated: 0 } },
+        { label: 'D', text: '不说话了，脸已经拉下来了', scores: { zen: 0, heated: 1 } }
       ]
     },
     {
       id: 15,
-      dimension: 'plan_random',
-      text: '比赛中途，你发现对手反手明显弱——',
+      dimension: 'zen_heated',
+      text: '被一个你觉得水平不如你的人赢了，干饭时——',
       options: [
-        { label: 'A', text: '太好了，接下来专打他反手', scores: { plan: 2, random: 0 } },
-        { label: 'B', text: '知道了，但不会一直打，容易被他适应', scores: { plan: 1, random: 0 } },
-        { label: 'C', text: '嗯……可能吧，打着打着就忘了', scores: { plan: 0, random: 2 } },
-        { label: 'D', text: '反手弱？没注意啊', scores: { plan: 0, random: 2 } }
+        { label: 'A', text: '"今天状态不好而已，吃饭吃饭"', scores: { zen: 2, heated: 0 } },
+        { label: 'B', text: '一边吃一边想刚才哪里打得不对', scores: { zen: 0, heated: 1 } },
+        { label: 'C', text: '"吃完回去再来一局！我不服！"', scores: { zen: 0, heated: 2 } },
+        { label: 'D', text: '笑着说"你今天不错啊"，但筷子夹菜明显用力了', scores: { zen: 0, heated: 1 } }
       ]
     },
     {
       id: 16,
-      dimension: 'plan_random',
-      text: '你的球拍包里通常有几把拍子？',
-      options: [
-        { label: 'A', text: '三把以上，不同拍对应不同对手和状态', scores: { plan: 2, random: 0 } },
-        { label: 'B', text: '两把，一主一备', scores: { plan: 1, random: 0 } },
-        { label: 'C', text: '一把走天下，用顺手了就不换', scores: { plan: 0, random: 1 } },
-        { label: 'D', text: '有时候甚至忘带拍子去蹭别人的', scores: { plan: 0, random: 2 } }
-      ]
-    },
-    {
-      id: 17,
-      dimension: 'plan_random',
-      text: '关于穿线/磅数——',
-      options: [
-        { label: 'A', text: '有固定的磅数和线型组合，误差不超过0.5磅', scores: { plan: 2, random: 0 } },
-        { label: 'B', text: '大概记得自己穿的什么', scores: { plan: 1, random: 0 } },
-        { label: 'C', text: '断了就穿，啥线都行', scores: { plan: 0, random: 2 } },
-        { label: 'D', text: '磅数是什么？（真诚提问）', scores: { plan: 0, random: 2 } }
-      ]
-    },
-    {
-      id: 18,
-      dimension: 'plan_random',
-      text: '一局打完了，你会复盘吗？',
-      options: [
-        { label: 'A', text: '会，甚至会跟搭子讨论哪几拍处理不好', scores: { plan: 2, random: 0 } },
-        { label: 'B', text: '大概想想关键分的处理', scores: { plan: 1, random: 0 } },
-        { label: 'C', text: '不会，打完就完了', scores: { plan: 0, random: 2 } },
-        { label: 'D', text: '会复盘，但只复盘自己打出的帅气球', scores: { plan: 0, random: 1 } }
-      ]
-    },
-
-    // ── Dimension 4: Zen vs Heated (Q19-Q24) ──
-    {
-      id: 19,
       dimension: 'zen_heated',
-      text: '关键分打丢了，你的第一反应是？',
+      text: '关于「赢球」这件事，你内心的真实想法是——',
       options: [
-        { label: 'A', text: '深呼吸，"没事，下一分"', scores: { zen: 2, heated: 0 } },
-        { label: 'B', text: '自己骂自己一句，然后继续', scores: { zen: 0, heated: 1 } },
-        { label: 'C', text: '猛拍大腿/跺脚/大喊一声', scores: { zen: 0, heated: 2 } },
-        { label: 'D', text: '表面平静，内心已经在写检讨', scores: { zen: 1, heated: 0 } }
-      ]
-    },
-    {
-      id: 20,
-      dimension: 'zen_heated',
-      text: '连输两局了，你现在的状态是？',
-      options: [
-        { label: 'A', text: '无所谓，开心就好', scores: { zen: 2, heated: 0 } },
-        { label: 'B', text: '越打越上头，今天必须赢回来', scores: { zen: 0, heated: 2 } },
-        { label: 'C', text: '冷静分析一下是哪里出了问题', scores: { zen: 1, heated: 0 } },
-        { label: 'D', text: '脸已经拉下来了，说话声也少了', scores: { zen: 0, heated: 1 } }
-      ]
-    },
-    {
-      id: 21,
-      dimension: 'zen_heated',
-      text: '对手一个擦网球得分了——',
-      options: [
-        { label: 'A', text: '"运气球！不算不算！"（但比分已经算了）', scores: { zen: 0, heated: 2 } },
-        { label: 'B', text: '鼓个掌，"好球好球"', scores: { zen: 2, heated: 0 } },
-        { label: 'C', text: '内心翻白眼，面上微笑', scores: { zen: 1, heated: 0 } },
-        { label: 'D', text: '立刻要下一球，想马上扳回来', scores: { zen: 0, heated: 1 } }
-      ]
-    },
-    {
-      id: 22,
-      dimension: 'zen_heated',
-      text: '被一个你觉得水平不如你的人赢了——',
-      options: [
-        { label: 'A', text: '无所谓，今天状态不好而已', scores: { zen: 2, heated: 0 } },
-        { label: 'B', text: '整晚都在想哪里打得不对', scores: { zen: 0, heated: 1 } },
-        { label: 'C', text: '当场要求再来一局', scores: { zen: 0, heated: 2 } },
-        { label: 'D', text: '笑笑说"你今天打得不错"，但心里不服', scores: { zen: 0, heated: 1 } }
-      ]
-    },
-    {
-      id: 23,
-      dimension: 'zen_heated',
-      text: '打完球收拍的时候，你通常在想——',
-      options: [
-        { label: 'A', text: '今天又运动了，舒服', scores: { zen: 2, heated: 0 } },
-        { label: 'B', text: '刚才那几分不应该丢的！', scores: { zen: 0, heated: 2 } },
-        { label: 'C', text: '还行吧，有赢有输很正常', scores: { zen: 1, heated: 0 } },
-        { label: 'D', text: '下次一定要赢回来', scores: { zen: 0, heated: 1 } }
-      ]
-    },
-    {
-      id: 24,
-      dimension: 'zen_heated',
-      text: '关于「赢球」这件事——',
-      options: [
-        { label: 'A', text: '赢了开心，输了也开心，打球嘛', scores: { zen: 2, heated: 0 } },
+        { label: 'A', text: '赢了开心输了也开心，打球嘛，重在吃饭', scores: { zen: 2, heated: 0 } },
         { label: 'B', text: '过程开心就好，比分不重要', scores: { zen: 1, heated: 0 } },
-        { label: 'C', text: '能赢干嘛不赢？比赛就是要赢', scores: { zen: 0, heated: 2 } },
-        { label: 'D', text: '我嘴上说不在意，但其实很想赢', scores: { zen: 0, heated: 1 } }
+        { label: 'C', text: '能赢干嘛不赢？下次约他我还要赢！', scores: { zen: 0, heated: 2 } },
+        { label: 'D', text: '嘴上说不在意……但心里暗暗较劲', scores: { zen: 0, heated: 1 } }
       ]
     }
   ];

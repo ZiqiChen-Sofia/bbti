@@ -356,6 +356,7 @@
     html += '<div class="result-footer">';
     html += '<p class="disclaimer">本测试仅供娱乐，别拿它当选拔依据、搭子判决书或分手理由。你的球场人格不代表你的真实水平——毕竟测出「暴力美学」的人可能杀球只有 80 码。打球开心就好！</p>';
     html += '<button class="restart-btn" id="btn-restart">🔄 重新测试</button>';
+    html += '<p class="author-credit">by @momo</p>';
     html += '</div>';
 
     container.innerHTML = html;
