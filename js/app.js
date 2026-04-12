@@ -757,35 +757,38 @@
       + '快来测测你是什么球场灵魂？';
 
     var shareUrl = window.location.href.split('#')[0];
+    var fullText = text + '\n' + shareUrl;
 
-    // Try Web Share API first
+    // Always copy to clipboard first so the user has the text regardless
+    copyToClipboard(fullText, true);
+
+    // Then try Web Share API as a bonus (non-blocking)
     if (navigator.share) {
       navigator.share({
         title: title,
         text: text,
         url: shareUrl
-      }).catch(function () {
-        // User cancelled or error, fall back to copy
-        copyToClipboard(text + '\n' + shareUrl);
-      });
-    } else {
-      copyToClipboard(text + '\n' + shareUrl);
+      }).catch(function () { /* user cancelled or error, already copied */ });
     }
   }
 
-  function copyToClipboard(text) {
+  function copyToClipboard(text, showGuide) {
+    var msg = showGuide
+      ? '已复制到剪贴板，去微信粘贴给球友吧 🏸'
+      : '链接已复制，快去分享给球友吧！';
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
-        showToast('链接已复制，快去分享给球友吧！');
+        showToast(msg);
       }).catch(function () {
-        fallbackCopy(text);
+        fallbackCopy(text, msg);
       });
     } else {
-      fallbackCopy(text);
+      fallbackCopy(text, msg);
     }
   }
 
-  function fallbackCopy(text) {
+  function fallbackCopy(text, msg) {
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
@@ -793,9 +796,9 @@
     ta.select();
     try {
       document.execCommand('copy');
-      showToast('链接已复制，快去分享给球友吧！');
+      showToast(msg || '链接已复制，快去分享给球友吧！');
     } catch (e) {
-      showToast('请手动复制链接分享');
+      showToast('请长按复制链接分享');
     }
     document.body.removeChild(ta);
   }
@@ -806,7 +809,7 @@
     toast.classList.add('show');
     setTimeout(function () {
       toast.classList.remove('show');
-    }, 2500);
+    }, 3500);
   }
 
   // ============================================================
