@@ -314,6 +314,36 @@
       40% { transform: scale(0.97); }
       100% { transform: scale(1); }
     }
+    /* ── Image option grid (Q16 memes) ── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .option-img-btn {
+      text-align: center;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .option-img {
+      width: 100%;
+      max-width: 140px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+    .option-img-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+    }
+    .option-img-btn.selected .option-img-label {
+      color: var(--color-accent);
+    }
+
     .option-label {
       font-weight: 600;
       color: var(--color-accent);
@@ -366,11 +396,18 @@
       text-align: center;
       margin-bottom: 32px;
     }
-    .result-emoji {
-      font-size: 72px;
-      line-height: 1;
-      margin-bottom: 16px;
+    .result-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      margin: 0 auto 16px;
+      display: block;
+      border: 4px solid var(--color-border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transition: transform 200ms ease;
     }
+    .result-avatar:hover { transform: scale(1.05); }
     .result-code {
       font-size: 32px;
       font-weight: 800;
@@ -381,7 +418,14 @@
     .result-name {
       font-size: 24px;
       font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .result-slogan {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-primary);
       margin-bottom: 12px;
+      line-height: 1.5;
     }
     .dimension-tags {
       display: flex;
@@ -400,7 +444,7 @@
       border-radius: 20px;
     }
     .result-tagline {
-      font-size: 16px;
+      font-size: 14px;
       color: var(--color-text-secondary);
       font-style: italic;
     }
@@ -435,6 +479,7 @@
     .quadrant-axis-x, .quadrant-axis-y {
       position: absolute;
       background: var(--color-border);
+      box-shadow: 0 0 6px rgba(0,0,0,0.06);
       animation: quadrantFadeIn 500ms ease forwards;
       opacity: 0;
     }
@@ -522,6 +567,37 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+    @keyframes dotBreathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+    .quadrant-corner {
+      position: absolute;
+      font-size: 10px;
+      color: var(--color-text-secondary);
+      opacity: 0.5;
+      line-height: 1.2;
+    }
+    .corner-tl { top: 8px; left: 8px; }
+    .corner-tr { top: 8px; right: 8px; text-align: right; }
+    .corner-bl { bottom: 8px; left: 8px; }
+    .corner-br { bottom: 8px; right: 8px; text-align: right; }
+    .dot-label {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-card);
+      padding: 2px 8px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      white-space: nowrap;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 400ms ease 900ms;
+      z-index: 3;
+    }
+    .dot-label.show { opacity: 1; }
 
     /* Section cards */
     .result-section {
@@ -531,6 +607,11 @@
       margin-bottom: 16px;
       box-shadow: var(--shadow-card);
       border: 1px solid var(--color-border);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .result-section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
     }
     .section-title {
       font-size: 14px;
@@ -605,27 +686,80 @@
       font-weight: 600;
       margin-right: 8px;
     }
+    .quote-copyable {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      cursor: pointer;
+      transition: color 200ms ease;
+    }
+    .quote-copyable:active {
+      color: var(--color-primary);
+    }
 
     /* Match cards */
     .match-card {
-      border-left: 4px solid;
-      padding-left: 16px;
+      position: relative;
+      padding-left: 20px;
+      overflow: hidden;
     }
-    .match-card.partner { border-left-color: var(--color-partner-border); background: var(--color-partner); }
-    .match-card.rival { border-left-color: var(--color-rival-border); background: var(--color-rival); }
+    .match-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+    }
+    .match-card.partner { background: var(--color-partner); }
+    .match-card.partner::before { background: linear-gradient(to bottom, #2EBD59, #A8E6CF); }
+    .match-card.rival { background: var(--color-rival); }
+    .match-card.rival::before { background: linear-gradient(to bottom, #E74C3C, #F5B7B1); }
     .match-type-header {
       font-size: 16px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+    }
+    .match-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .match-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid var(--color-border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .match-type-name {
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
     }
     .match-reason {
       font-size: 14px;
       line-height: 1.6;
+    }
+    .match-short-tag {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 8px;
+      padding: 4px 10px;
+      display: inline-block;
+      border-radius: 12px;
+    }
+    .partner .match-short-tag {
+      color: #2EBD59;
+      background: rgba(46,189,89,0.15);
+    }
+    .rival .match-short-tag {
+      color: #E74C3C;
+      background: rgba(231,76,60,0.15);
     }
 
     /* Share buttons */

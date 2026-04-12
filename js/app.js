@@ -68,18 +68,24 @@
 
   function buildQuestionHTML(qIndex) {
     var q = DATA.questions[qIndex];
+    var hasImg = q.options.some(function(o) { return !!o.img; });
     var html = '';
     if (q.scene) {
       html += '<p class="scene-text">' + q.scene + '</p>';
     }
     html += '<h2 class="question-text">Q' + q.id + '. ' + q.text + '</h2>';
-    html += '<div class="options-list">';
+    html += '<div class="options-list' + (hasImg ? ' options-grid' : '') + '">';
     for (var i = 0; i < q.options.length; i++) {
       var opt = q.options[i];
       var selectedClass = (state.answers[qIndex] === i) ? ' selected' : '';
-      html += '<button class="option-btn' + selectedClass + '" data-question="' + qIndex + '" data-option="' + i + '">';
-      html += '<span class="option-label">' + opt.label + '.</span>';
-      html += '<span>' + opt.text + '</span>';
+      html += '<button class="option-btn' + (hasImg ? ' option-img-btn' : '') + selectedClass + '" data-question="' + qIndex + '" data-option="' + i + '">';
+      if (opt.img) {
+        html += '<img class="option-img" src="' + opt.img + '" alt="' + opt.text + '">';
+        html += '<span class="option-img-label">' + opt.label + '. ' + opt.text.replace('.png', '') + '</span>';
+      } else {
+        html += '<span class="option-label">' + opt.label + '.</span>';
+        html += '<span>' + opt.text + '</span>';
+      }
       html += '</button>';
     }
     html += '</div>';
@@ -282,6 +288,7 @@
   // ============================================================
   function buildQuadrantChart() {
     var s = state.scores;
+    var p = DATA.personalities[state.resultType];
     var isPlanner = s.plan >= s.random;
     var isZen = s.zen >= s.heated;
     var dotClass = 'quadrant-dot';
@@ -297,6 +304,10 @@
 
     var html = '';
     html += '<div class="quadrant-chart">';
+    html += '<span class="quadrant-corner corner-tl">技巧·防守</span>';
+    html += '<span class="quadrant-corner corner-tr">技巧·进攻</span>';
+    html += '<span class="quadrant-corner corner-bl">力量·防守</span>';
+    html += '<span class="quadrant-corner corner-br">力量·进攻</span>';
     html += '<div class="quadrant-axis-x"></div>';
     html += '<div class="quadrant-axis-y"></div>';
     html += '<span class="quadrant-label label-top">🎯 技巧</span>';
@@ -304,6 +315,7 @@
     html += '<span class="quadrant-label label-left">🛡️ 防守</span>';
     html += '<span class="quadrant-label label-right">🗡️ 进攻</span>';
     html += '<div class="' + dotClass + '" data-left="' + finalLeft + '" data-top="' + finalTop + '"></div>';
+    html += '<div class="dot-label">' + (p ? p.dotLabel : '') + '</div>';
     html += '</div>';
 
     // Legend
@@ -322,6 +334,21 @@
     if (!dot) return;
     dot.style.left = dot.dataset.left + '%';
     dot.style.top = dot.dataset.top + '%';
+
+    // Position and show dot interpretation label
+    var label = container.querySelector('.dot-label');
+    if (label) {
+      label.style.left = dot.dataset.left + '%';
+      label.style.top = 'calc(' + dot.dataset.top + '% + 18px)';
+      setTimeout(function () {
+        label.classList.add('show');
+      }, 100);
+    }
+
+    // Add breathing animation after bounce settles
+    setTimeout(function () {
+      dot.style.animation = 'dotBreathe 2s ease-in-out infinite';
+    }, 900);
   }
 
   // ============================================================
@@ -334,57 +361,75 @@
     var container = $('#result-container');
     var html = '';
 
-    // Hero section
+    // ── Hero section ──
+    var avatarSrc = 'img/' + state.resultType.toLowerCase() + '.png';
     html += '<div class="result-hero">';
-    html += '<div class="result-emoji">' + p.emoji + '</div>';
+    html += '<img class="result-avatar" src="' + avatarSrc + '" alt="' + p.nameCN + '">';
     html += '<div class="result-code">' + p.code.split('').join(' ') + '</div>';
     html += '<h1 class="result-name">' + p.nameCN + '</h1>';
+    html += '<div class="result-slogan">' + p.slogan + '</div>';
+    html += '<div class="dimension-tags">';
+    for (var d = 0; d < p.dimensions.length; d++) {
+      html += '<span class="dim-tag">' + p.dimensions[d] + '</span>';
+    }
+    html += '</div>';
     html += '<p class="result-tagline">' + p.tagline + '</p>';
     html += '</div>';
 
-    // Traits (moved before archetype)
+    // ── Quadrant Chart (C position) ──
     html += '<div class="result-section">';
-    html += '<div class="trait-item"><span class="trait-label">🏸 核心行为</span>' + p.coreBehavior + '</div>';
-    html += '<div class="trait-item"><span class="trait-label">📋 行为模式</span>' + p.behaviorPattern + '</div>';
-    html += '<div class="trait-item"><span class="trait-label">💬 经典语录</span>' + p.quote + '</div>';
+    html += '<div class="section-title">📊 维度坐标</div>';
+    html += buildQuadrantChart();
     html += '</div>';
 
-    // Player archetype
+    // ── Traits (行为卡片) ──
+    html += '<div class="result-section">';
+    html += '<div class="section-title">🏸 行为特征</div>';
+    html += '<div class="trait-item"><span class="trait-label">🏸 核心行为</span>' + p.coreBehavior + '</div>';
+    html += '<div class="trait-item"><span class="trait-label">🏸 行为模式</span>' + p.behaviorPattern + '</div>';
+    html += '<div class="trait-item"><span class="trait-label">🏸 经典语录</span><span class="quote-copyable" data-quote="' + p.quote.replace(/"/g, '&quot;') + '">' + p.quote + '</span></div>';
+    html += '</div>';
+
+    // ── Player archetype (灵魂像) ──
     html += '<div class="result-section">';
     html += '<div class="section-title">⭐ 你的球场灵魂像</div>';
     html += '<div class="archetype-name">' + p.playerArchetype.name + '</div>';
     html += '<div class="archetype-desc">' + p.playerArchetype.desc + '</div>';
     html += '</div>';
 
-    // Quadrant Chart
-    html += '<div class="result-section">';
-    html += '<div class="section-title">📊 维度坐标</div>';
-    html += buildQuadrantChart();
-    html += '</div>';
-
-    // Partner card
+    // ── Partner card ──
     var partnerData = DATA.personalities[p.partner.code];
+    var partnerAvatar = 'img/' + p.partner.code.toLowerCase() + '.png';
     html += '<div class="result-section match-card partner">';
     html += '<div class="match-type-header">🏸 最佳双打搭档</div>';
-    html += '<div class="match-type-name">' + partnerData.emoji + ' ' + partnerData.code + ' ' + partnerData.nameCN + '</div>';
+    html += '<div class="match-info">';
+    html += '<img class="match-avatar" src="' + partnerAvatar + '" alt="' + partnerData.nameCN + '">';
+    html += '<div class="match-type-name">' + partnerData.code + ' ' + partnerData.nameCN + '</div>';
+    html += '</div>';
     html += '<div class="match-reason">' + p.partner.reason + '</div>';
+    html += '<div class="match-short-tag">' + p.partner.shortTag + '</div>';
     html += '</div>';
 
-    // Rival card
+    // ── Rival card ──
     var rivalData = DATA.personalities[p.rival.code];
+    var rivalAvatar = 'img/' + p.rival.code.toLowerCase() + '.png';
     html += '<div class="result-section match-card rival">';
     html += '<div class="match-type-header">⚔️ 最佳对打宿敌</div>';
-    html += '<div class="match-type-name">' + rivalData.emoji + ' ' + rivalData.code + ' ' + rivalData.nameCN + '</div>';
+    html += '<div class="match-info">';
+    html += '<img class="match-avatar" src="' + rivalAvatar + '" alt="' + rivalData.nameCN + '">';
+    html += '<div class="match-type-name">' + rivalData.code + ' ' + rivalData.nameCN + '</div>';
+    html += '</div>';
     html += '<div class="match-reason">' + p.rival.reason + '</div>';
+    html += '<div class="match-short-tag">' + p.rival.shortTag + '</div>';
     html += '</div>';
 
-    // Share section
+    // ── Share section ──
     html += '<div class="share-section">';
     html += '<button class="share-btn primary" id="btn-share">🏸 转发找到你的搭子/宿敌</button>';
     html += '<button class="share-btn secondary" id="btn-share-card">🖼️ 生成分享卡片</button>';
     html += '</div>';
 
-    // Footer
+    // ── Footer ──
     html += '<div class="result-footer">';
     html += '<p class="disclaimer">本测试仅供娱乐，别拿它当选拔依据、搭子判决书或分手理由。你的球场人格不代表你的真实水平——毕竟测出「暴力美学」的人可能杀球只有 80 码。打球开心就好！</p>';
     html += '<button class="restart-btn" id="btn-restart">🔄 重新测试</button>';
@@ -416,6 +461,30 @@
     if (restartBtn) {
       restartBtn.addEventListener('click', resetQuiz);
     }
+
+    // Quote click-to-copy
+    var quoteEl = container.querySelector('.quote-copyable');
+    if (quoteEl) {
+      quoteEl.addEventListener('click', function () {
+        var text = quoteEl.dataset.quote;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            showToast('语录已复制！');
+          }).catch(function () {
+            showToast('语录已复制！');
+          });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+          document.body.removeChild(ta);
+          showToast('语录已复制！');
+        }
+      });
+    }
   }
 
   // ============================================================
@@ -426,6 +495,40 @@
     var partnerData = DATA.personalities[p.partner.code];
     var rivalData = DATA.personalities[p.rival.code];
 
+    // Preload 3 avatar images, then draw
+    var srcs = [
+      'img/' + state.resultType.toLowerCase() + '.png',
+      'img/' + p.partner.code.toLowerCase() + '.png',
+      'img/' + p.rival.code.toLowerCase() + '.png'
+    ];
+    var imgs = [];
+    var loaded = 0;
+    for (var si = 0; si < srcs.length; si++) {
+      (function (idx) {
+        var img = new Image();
+        img.onload = img.onerror = function () {
+          imgs[idx] = img;
+          loaded++;
+          if (loaded === srcs.length) drawCard(p, partnerData, rivalData, imgs);
+        };
+        img.src = srcs[idx];
+      })(si);
+    }
+  }
+
+  function drawRoundedImage(ctx, img, x, y, size, radius) {
+    ctx.save();
+    roundRect(ctx, x, y, size, size, radius);
+    ctx.clip();
+    ctx.drawImage(img, x, y, size, size);
+    ctx.restore();
+    ctx.strokeStyle = '#EBE3D5';
+    ctx.lineWidth = 2;
+    roundRect(ctx, x, y, size, size, radius);
+    ctx.stroke();
+  }
+
+  function drawCard(p, partnerData, rivalData, imgs) {
     var canvas = document.getElementById('share-canvas');
     var dpr = Math.min(window.devicePixelRatio || 1, 3);
     var W = 360;
@@ -465,33 +568,35 @@
     ctx.textAlign = 'center';
     ctx.fillText('BBTI 羽毛球人格测试', W / 2, 52);
 
-    // Emoji
-    ctx.font = '56px serif';
-    ctx.fillText(p.emoji, W / 2, 120);
+    // Main avatar (circle)
+    if (imgs[0] && imgs[0].complete && imgs[0].naturalWidth > 0) {
+      drawRoundedImage(ctx, imgs[0], W / 2 - 48, 64, 96, 12);
+    }
 
     // Code
     ctx.fillStyle = '#27AE60';
     ctx.font = 'bold 28px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(p.code.split('').join('  '), W / 2, 158);
+    ctx.textAlign = 'center';
+    ctx.fillText(p.code.split('').join('  '), W / 2, 186);
 
     // Name
     ctx.fillStyle = '#2C3E50';
     ctx.font = 'bold 22px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(p.nameCN, W / 2, 192);
+    ctx.fillText(p.nameCN, W / 2, 216);
 
     // Tagline
     ctx.fillStyle = '#7A8B8C';
     ctx.font = 'italic 14px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(p.tagline, W / 2, 218);
+    ctx.fillText(p.tagline, W / 2, 240);
 
     // Divider
     ctx.strokeStyle = '#EBE3D5';
     ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(40, 238); ctx.lineTo(W - 40, 238); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(40, 258); ctx.lineTo(W - 40, 258); ctx.stroke();
 
     // Traits section
     ctx.textAlign = 'left';
-    var ty = 266;
+    var ty = 282;
     var traits = [
       { label: '核心行为', value: p.coreBehavior },
       { label: '行为模式', value: p.behaviorPattern },
@@ -503,7 +608,7 @@
       ctx.fillText(traits[t].label, 30, ty);
       ctx.fillStyle = '#2C3E50';
       ctx.font = '12px -apple-system, PingFang SC, sans-serif';
-      var lines = wrapText(ctx, traits[t].value, W - 60, 12);
+      var lines = wrapText(ctx, traits[t].value, W - 60);
       for (var li = 0; li < lines.length; li++) {
         ty += 18;
         ctx.fillText(lines[li], 30, ty);
@@ -522,36 +627,46 @@
     ty += 18;
     ctx.fillStyle = '#7A8B8C';
     ctx.font = '12px -apple-system, PingFang SC, sans-serif';
-    var archLines = wrapText(ctx, p.playerArchetype.desc, W - 60, 12);
+    var archLines = wrapText(ctx, p.playerArchetype.desc, W - 60);
     for (var al = 0; al < archLines.length; al++) {
       ty += 16;
       ctx.fillText(archLines[al], 30, ty);
     }
 
-    // Partner & Rival compact row
+    // Partner & Rival compact row with avatars
     ty += 32;
-    // Partner
+    var cardH = 58;
+    var cardW = (W - 50) / 2;
+    // Partner bg
     ctx.fillStyle = 'rgba(46,189,89,0.10)';
-    roundRect(ctx, 20, ty - 14, (W - 50) / 2, 50, 8);
+    roundRect(ctx, 20, ty - 14, cardW, cardH, 8);
     ctx.fill();
+    // Partner avatar
+    if (imgs[1] && imgs[1].complete && imgs[1].naturalWidth > 0) {
+      drawRoundedImage(ctx, imgs[1], 30, ty - 4, 32, 6);
+    }
     ctx.fillStyle = '#2EBD59';
     ctx.font = 'bold 11px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText('最佳搭档', 30, ty + 2);
+    ctx.fillText('最佳搭档', 68, ty + 4);
     ctx.fillStyle = '#2C3E50';
     ctx.font = '13px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(partnerData.emoji + ' ' + partnerData.nameCN, 30, ty + 22);
+    ctx.fillText(partnerData.nameCN, 68, ty + 24);
 
-    // Rival
-    var rx = 20 + (W - 50) / 2 + 10;
+    // Rival bg
+    var rx = 20 + cardW + 10;
     ctx.fillStyle = 'rgba(231,76,60,0.10)';
-    roundRect(ctx, rx, ty - 14, (W - 50) / 2, 50, 8);
+    roundRect(ctx, rx, ty - 14, cardW, cardH, 8);
     ctx.fill();
+    // Rival avatar
+    if (imgs[2] && imgs[2].complete && imgs[2].naturalWidth > 0) {
+      drawRoundedImage(ctx, imgs[2], rx + 10, ty - 4, 32, 6);
+    }
     ctx.fillStyle = '#E74C3C';
     ctx.font = 'bold 11px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText('宿敌', rx + 10, ty + 2);
+    ctx.fillText('宿敌', rx + 48, ty + 4);
     ctx.fillStyle = '#2C3E50';
     ctx.font = '13px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(rivalData.emoji + ' ' + rivalData.nameCN, rx + 10, ty + 22);
+    ctx.fillText(rivalData.nameCN, rx + 48, ty + 24);
 
     // Footer CTA
     ctx.textAlign = 'center';
@@ -563,8 +678,7 @@
     ctx.fillText('BBTI · by @momo', W / 2, H - 20);
 
     // Show overlay
-    var overlay = document.getElementById('share-overlay');
-    overlay.classList.add('show');
+    document.getElementById('share-overlay').classList.add('show');
   }
 
   function wrapText(ctx, text, maxWidth) {
@@ -635,8 +749,12 @@
     var p = DATA.personalities[state.resultType];
     var partnerData = DATA.personalities[p.partner.code];
     var rivalData = DATA.personalities[p.rival.code];
-    var title = '🏸 我是' + p.emoji + p.nameCN + '！';
-    var text = '最佳搭档是' + partnerData.emoji + partnerData.nameCN + '，宿敌是' + rivalData.emoji + rivalData.nameCN + '！快来测测你是什么球场灵魂？';
+    var title = '🏸 我是' + p.emoji + ' ' + p.nameCN + '！';
+    var text = '🏸 我是' + p.emoji + ' ' + p.nameCN + '！\n'
+      + p.slogan + '\n'
+      + '最佳搭档 ' + partnerData.emoji + ' ' + partnerData.nameCN + '：' + p.partner.shortTag + '\n'
+      + '宿敌 ' + rivalData.emoji + ' ' + rivalData.nameCN + '：' + p.rival.shortTag + '\n'
+      + '快来测测你是什么球场灵魂？';
 
     var shareUrl = window.location.href.split('#')[0];
 
@@ -648,10 +766,10 @@
         url: shareUrl
       }).catch(function () {
         // User cancelled or error, fall back to copy
-        copyToClipboard(text + ' ' + shareUrl);
+        copyToClipboard(text + '\n' + shareUrl);
       });
     } else {
-      copyToClipboard(text + ' ' + shareUrl);
+      copyToClipboard(text + '\n' + shareUrl);
     }
   }
 
