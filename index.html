@@ -993,6 +993,13 @@
       border-radius: var(--radius-sm);
       margin-bottom: 16px;
     }
+    .share-card-img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      display: none;
+    }
     .share-overlay-actions {
       display: flex;
       gap: 10px;
@@ -1085,7 +1092,7 @@
     <div class="share-overlay-inner">
       <canvas id="share-canvas"></canvas>
       <div class="share-overlay-actions">
-        <button class="share-card-save" id="btn-save-card">保存图片</button>
+        <button class="share-card-save" id="btn-save-card">长按图片保存到相册</button>
         <button class="share-card-close" id="btn-close-card">关闭</button>
       </div>
     </div>

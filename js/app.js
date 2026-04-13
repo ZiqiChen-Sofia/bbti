@@ -530,7 +530,36 @@
     var canvas = document.getElementById('share-canvas');
     var dpr = Math.min(window.devicePixelRatio || 1, 3);
     var W = 360;
-    var H = 640;
+
+    // --- Phase 1: measure content height ---
+    var offscreen = document.createElement('canvas');
+    offscreen.width = W;
+    offscreen.height = 1;
+    var mctx = offscreen.getContext('2d');
+    mctx.font = '12px -apple-system, PingFang SC, sans-serif';
+
+    var ty = 282; // starting Y after code/name/tagline/divider (fixed part)
+    var traits = [
+      { label: '核心行为', value: p.coreBehavior },
+      { label: '行为模式', value: p.behaviorPattern },
+      { label: '经典语录', value: p.quote }
+    ];
+    for (var mt = 0; mt < traits.length; mt++) {
+      var mlines = wrapText(mctx, traits[mt].value, W - 60);
+      ty += mlines.length * 18 + 24;
+    }
+    // Archetype
+    ty += 20; // label
+    ty += 18; // name
+    var marchLines = wrapText(mctx, p.playerArchetype.desc, W - 60);
+    ty += marchLines.length * 16;
+    ty += 32; // gap before match cards
+    ty += 58; // match card height
+    ty += 60; // footer CTA + padding
+
+    var H = Math.max(ty, 480);
+
+    // --- Phase 2: draw ---
     canvas.width = W * dpr;
     canvas.height = H * dpr;
     canvas.style.width = W + 'px';
@@ -566,7 +595,7 @@
     ctx.textAlign = 'center';
     ctx.fillText('BBTI 羽毛球人格测试', W / 2, 52);
 
-    // Main avatar (circle)
+    // Main avatar
     if (imgs[0] && imgs[0].complete && imgs[0].naturalWidth > 0) {
       drawRoundedImage(ctx, imgs[0], W / 2 - 48, 64, 96, 12);
     }
@@ -594,77 +623,68 @@
 
     // Traits section
     ctx.textAlign = 'left';
-    var ty = 282;
-    var traits = [
-      { label: '核心行为', value: p.coreBehavior },
-      { label: '行为模式', value: p.behaviorPattern },
-      { label: '经典语录', value: p.quote }
-    ];
+    var dy = 282;
     for (var t = 0; t < traits.length; t++) {
       ctx.fillStyle = '#FF6B35';
       ctx.font = 'bold 12px -apple-system, PingFang SC, sans-serif';
-      ctx.fillText(traits[t].label, 30, ty);
+      ctx.fillText(traits[t].label, 30, dy);
       ctx.fillStyle = '#2C3E50';
       ctx.font = '12px -apple-system, PingFang SC, sans-serif';
       var lines = wrapText(ctx, traits[t].value, W - 60);
       for (var li = 0; li < lines.length; li++) {
-        ty += 18;
-        ctx.fillText(lines[li], 30, ty);
+        dy += 18;
+        ctx.fillText(lines[li], 30, dy);
       }
-      ty += 24;
+      dy += 24;
     }
 
     // Archetype
     ctx.fillStyle = '#7A8B8C';
     ctx.font = '12px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText('球场灵魂像', 30, ty);
-    ty += 20;
+    ctx.fillText('球场灵魂像', 30, dy);
+    dy += 20;
     ctx.fillStyle = '#27AE60';
     ctx.font = 'bold 16px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(p.playerArchetype.name, 30, ty);
-    ty += 18;
+    ctx.fillText(p.playerArchetype.name, 30, dy);
+    dy += 18;
     ctx.fillStyle = '#7A8B8C';
     ctx.font = '12px -apple-system, PingFang SC, sans-serif';
     var archLines = wrapText(ctx, p.playerArchetype.desc, W - 60);
     for (var al = 0; al < archLines.length; al++) {
-      ty += 16;
-      ctx.fillText(archLines[al], 30, ty);
+      dy += 16;
+      ctx.fillText(archLines[al], 30, dy);
     }
 
-    // Partner & Rival compact row with avatars
-    ty += 32;
+    // Partner & Rival compact row
+    dy += 32;
     var cardH = 58;
     var cardW = (W - 50) / 2;
-    // Partner bg
     ctx.fillStyle = 'rgba(46,189,89,0.10)';
-    roundRect(ctx, 20, ty - 14, cardW, cardH, 8);
+    roundRect(ctx, 20, dy - 14, cardW, cardH, 8);
     ctx.fill();
-    // Partner avatar
     if (imgs[1] && imgs[1].complete && imgs[1].naturalWidth > 0) {
-      drawRoundedImage(ctx, imgs[1], 30, ty - 4, 32, 6);
+      drawRoundedImage(ctx, imgs[1], 30, dy - 4, 32, 6);
     }
     ctx.fillStyle = '#2EBD59';
     ctx.font = 'bold 11px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText('最佳搭档', 68, ty + 4);
+    ctx.fillText('最佳搭档', 68, dy + 4);
     ctx.fillStyle = '#2C3E50';
     ctx.font = '13px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(partnerData.nameCN, 68, ty + 24);
+    ctx.fillText(partnerData.nameCN, 68, dy + 24);
 
-    // Rival bg
     var rx = 20 + cardW + 10;
     ctx.fillStyle = 'rgba(231,76,60,0.10)';
-    roundRect(ctx, rx, ty - 14, cardW, cardH, 8);
+    roundRect(ctx, rx, dy - 14, cardW, cardH, 8);
     ctx.fill();
-    // Rival avatar
     if (imgs[2] && imgs[2].complete && imgs[2].naturalWidth > 0) {
-      drawRoundedImage(ctx, imgs[2], rx + 10, ty - 4, 32, 6);
+      drawRoundedImage(ctx, imgs[2], rx + 10, dy - 4, 32, 6);
     }
     ctx.fillStyle = '#E74C3C';
     ctx.font = 'bold 11px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText('宿敌', rx + 48, ty + 4);
+    ctx.fillText('宿敌', rx + 48, dy + 4);
     ctx.fillStyle = '#2C3E50';
     ctx.font = '13px -apple-system, PingFang SC, sans-serif';
-    ctx.fillText(rivalData.nameCN, rx + 48, ty + 24);
+    ctx.fillText(rivalData.nameCN, rx + 48, dy + 24);
 
     // Footer CTA
     ctx.textAlign = 'center';
@@ -674,6 +694,18 @@
     ctx.fillStyle = '#EBE3D5';
     ctx.font = '11px -apple-system, PingFang SC, sans-serif';
     ctx.fillText('BBTI · by @momo', W / 2, H - 20);
+
+    // Convert canvas to <img> for long-press saving
+    var imgEl = document.getElementById('share-card-img');
+    if (!imgEl) {
+      imgEl = document.createElement('img');
+      imgEl.id = 'share-card-img';
+      imgEl.className = 'share-card-img';
+      canvas.parentNode.insertBefore(imgEl, canvas);
+    }
+    imgEl.src = canvas.toDataURL('image/png');
+    imgEl.style.display = 'block';
+    canvas.style.display = 'none';
 
     // Show overlay
     document.getElementById('share-overlay').classList.add('show');
@@ -710,34 +742,16 @@
   }
 
   function saveShareCard() {
-    var canvas = document.getElementById('share-canvas');
-    try {
-      var link = document.createElement('a');
-      link.download = 'BBTI-' + state.resultType + '.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      showToast('图片已保存！');
-    } catch (e) {
-      // iOS Safari may block toDataURL in some contexts, try blob
-      canvas.toBlob(function (blob) {
-        if (!blob) {
-          showToast('保存失败，请长按图片保存');
-          return;
-        }
-        if (navigator.share) {
-          var file = new File([blob], 'BBTI-' + state.resultType + '.png', { type: 'image/png' });
-          navigator.share({ files: [file] }).catch(function () {
-            showToast('请长按图片保存');
-          });
-        } else {
-          showToast('请长按图片保存');
-        }
-      }, 'image/png');
-    }
+    showToast('长按上方图片即可保存到相册');
   }
 
   function closeShareCard() {
     document.getElementById('share-overlay').classList.remove('show');
+    // Reset: hide img, show canvas for next generation
+    var imgEl = document.getElementById('share-card-img');
+    if (imgEl) imgEl.style.display = 'none';
+    var canvas = document.getElementById('share-canvas');
+    canvas.style.display = '';
   }
 
   // ============================================================
